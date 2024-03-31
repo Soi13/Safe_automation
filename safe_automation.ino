@@ -36,6 +36,13 @@ void loop() {
   //Serial.println();
   //delay(1000);
 
+  //char key = keypad.getKey();// Read the key
+  // Print if key pressed
+  //if (key){
+  //  Serial.print("Key Pressed : ");
+  //  Serial.println(key);
+  / / }
+
   lcd.print("Dasha & Liza"); // Prints "Arduino" on the LCD 
   delay(2000); // 3 seconds delay 
   lcd.setCursor(0,1); // Sets the location at which subsequent text written to the LCD will be displayed 
