@@ -6,10 +6,15 @@ This is for kids. Screen will display some math tasks (for example 4*8), if corr
 #include <Keypad.h>
 
 LiquidCrystal lcd(1, 2, 4, 5, 6, 7); 
-const int minVal =  1;   // Inclusive
-const int maxVal = 10;   // Exclusive
+const int minVal =  1;   //Inclusive
+const int maxVal = 10;   //Exclusive
 
 int res;
+int attempt = 0;
+
+int trigPin = 9; //TRIG pin
+int echoPin = 8; //ECHO pin
+float duration_us, distance_cm;
 
 const byte ROWS = 4;
 const byte COLUMNS = 4;
@@ -37,36 +42,46 @@ void display_task() {
 
 void setup() {
   //Serial.begin(9600);
+  randomSeed(analogRead(0)); // Seed the random number generator otherwise at the first start arduino will generate the same digits
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
   lcd.begin(16,2);
   display_task();
 }
 
 void loop() {
-   String enteredDigits = "";
-
-  // Collect digits until a '#' key is pressed
-  while (true) {
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
-      if (key == '#') {
-        break;
+  String enteredDigits = "";
+  //Person has three attempts for entering solved tasks
+  while (attempt < 3) {
+    //Collect digits until a '#' key is pressed
+    while (true) {
+      char key = keypad.getKey();
+      if (key != NO_KEY) {
+        if (key == '#') {
+          break;
+        }
+        enteredDigits += key;
+        lcd.setCursor(13, 1);
+        lcd.print(enteredDigits);
       }
-      enteredDigits += key;
-      lcd.setCursor(13, 1);
-      lcd.print(enteredDigits);
     }
-  }
 
-  if (enteredDigits.equals(String(res))) {
-    lcd.clear();
-    lcd.print("Correct answer!");
-  } else {
-    lcd.clear();
-    lcd.print("Incorrect answer!");
-  }
+    if (enteredDigits.equals(String(res))) {
+      lcd.clear();
+      lcd.print("Correct answer!");
+      enteredDigits="";
+      attempt++;
+    } else {
+      lcd.clear();
+      lcd.print("Incorrect answer!");
+    }
 
-  // Delay to avoid rapid key detection
-  delay(1000);
+    // Delay to avoid rapid key detection
+    delay(1000);
+    lcd.clear();
+    display_task();
+  }
+  
+  //After threes successfull attempts open the cabinet door
   lcd.clear();
-  display_task();
 }
