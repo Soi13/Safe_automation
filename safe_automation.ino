@@ -30,10 +30,7 @@ const int maxVal = 10;   //Exclusive
 
 int res;
 int attempt = 0;
-
-int trigPin = 9; //TRIG pin
-int echoPin = 8; //ECHO pin
-float duration_us, distance_cm;
+int k;
 
 const byte ROWS = 4;
 const byte COLUMNS = 4;
@@ -65,44 +62,32 @@ void display_task() {
 
 void open_cabinet() {
   lcd.clear();
+  lcd.print("Opening cabinet!");
   digitalWrite(13, HIGH);
   tone(12, 1000); 
   delay(1000);              // wait for a second
   digitalWrite(13, LOW);
   noTone(12);  
+  delay(1000);
+  lcd.clear();
 }
 
 void setup() {
   //Serial.begin(115200);
   randomSeed(analogRead(0)); // Seed the random number generator otherwise at the first start arduino will generate the same digits
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
+  pinMode(13, OUTPUT); //LED
+  pinMode(12, OUTPUT); //Buzzer
+  pinMode(21, OUTPUT); // Relay
+  pinMode(22, OUTPUT); // Relay
   lcd.begin(16,2);
   display_task();
   SPI.begin(); 
   RC522.init();
-  pinMode(13, OUTPUT); //LED
-  pinMode(12, OUTPUT); //Buzzer
+  digitalWrite(21, HIGH); // Relay
+  digitalWrite(22, HIGH); // Relay
 }
 
 void loop() {
-  //Check why RFID doesn't work with codepanel but alone works great.
-  /*if (RC522.isCard()) {
-    String id_key = "";
-    RC522.readCardSerial();
-    
-    for (int i=0; i<5; i++) {
-      id_key.concat(String(RC522.serNum[i], HEX));
-    }
-    Serial.print(id_key);
-
-    if (id_key == RFID_Card || id_key == RFID_Token) {
-      id_key = "";
-      open_cabinet();
-    }
-  } 
-*/
-
   String enteredDigits = "";
   //Person has three attempts for entering solved tasks
   while (attempt < 3) {
@@ -115,8 +100,27 @@ void loop() {
         }
         enteredDigits += key;
         lcd.setCursor(13, 1);
-        lcd.print(enteredDigits);
+        lcd.print(enteredDigits);        
       }
+
+      //////Check here RFID card and if card correct clear display and open cabinet
+      if (RC522.isCard()) {
+        String id_key = "";
+        RC522.readCardSerial();
+        
+        for (int i=0; i<5; i++) {
+          id_key.concat(String(RC522.serNum[i], HEX));
+        }
+        Serial.print(id_key);
+
+        if (id_key == RFID_Card || id_key == RFID_Token) {
+          id_key = "";
+          open_cabinet();
+          attempt = 0;
+          display_task();
+        }
+      } 
+      /////////////////////////////////////////////////////////////////////////////
     }
 
     if (enteredDigits.equals(String(res))) {
@@ -127,6 +131,7 @@ void loop() {
     } else {
       lcd.clear();
       lcd.print("Incorrect answer!");
+      enteredDigits = "";
     }
 
     // Delay to avoid rapid key detection
@@ -135,6 +140,8 @@ void loop() {
     display_task();
   }
  
-  //After threes successfull attempts open the cabinet door
-  //open_cabinet();
+  //After three successfull attempts open the cabinet door and then show task again for next attempt of opening
+  open_cabinet();
+  attempt = 0;
+  display_task();
 }
