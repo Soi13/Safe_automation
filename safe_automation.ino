@@ -62,7 +62,7 @@ void display_task() {
 
 void open_cabinet() {
   lcd.clear();
-  lcd.print("Opening cabinet!");
+  lcd.print("Open cabinet!");
   digitalWrite(13, HIGH);
   tone(12, 1000); 
   delay(1000);              // wait for a second
@@ -70,6 +70,28 @@ void open_cabinet() {
   noTone(12);  
   delay(1000);
   lcd.clear();
+  digitalWrite(30, HIGH);
+  digitalWrite(31, LOW);
+  delay(5000);
+  digitalWrite(30, LOW);
+  digitalWrite(31, LOW);
+  }
+
+void close_cabinet() {
+  lcd.clear();
+  lcd.print("Close cabinet!");
+  digitalWrite(13, HIGH);
+  tone(12, 1000); 
+  delay(1000);              // wait for a second
+  digitalWrite(13, LOW);
+  noTone(12);
+  delay(1000);
+  lcd.clear();
+  digitalWrite(30, LOW);
+  digitalWrite(31, HIGH);
+  delay(5000);
+  digitalWrite(30, LOW);
+  digitalWrite(31, LOW);
 }
 
 void setup() {
@@ -77,14 +99,14 @@ void setup() {
   randomSeed(analogRead(0)); // Seed the random number generator otherwise at the first start arduino will generate the same digits
   pinMode(13, OUTPUT); //LED
   pinMode(12, OUTPUT); //Buzzer
-  pinMode(21, OUTPUT); // Relay
-  pinMode(22, OUTPUT); // Relay
+  pinMode(30, OUTPUT); // Relay
+  pinMode(31, OUTPUT); // Relay
   lcd.begin(16,2);
   display_task();
   SPI.begin(); 
   RC522.init();
-  digitalWrite(21, HIGH); // Relay
-  digitalWrite(22, HIGH); // Relay
+  digitalWrite(30, LOW); // Relay
+  digitalWrite(31, LOW); // Relay
 }
 
 void loop() {
@@ -143,5 +165,6 @@ void loop() {
   //After three successfull attempts open the cabinet door and then show task again for next attempt of opening
   open_cabinet();
   attempt = 0;
+  close_cabinet();
   display_task();
 }
