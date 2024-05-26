@@ -122,7 +122,22 @@ void loop() {
         }
         enteredDigits += key;
         lcd.setCursor(13, 1);
-        lcd.print(enteredDigits);        
+        lcd.print(enteredDigits);       
+      }
+
+      //My password for opening cabinet
+      if (enteredDigits.equals("8930")) {
+         open_cabinet();
+         enteredDigits = "";
+         attempt = 0;
+         display_task();
+      }
+      //My password for closing cabinet
+      if (enteredDigits.equals("2810")) {
+         close_cabinet();
+         enteredDigits = "";
+         attempt = 0;
+         display_task();
       }
 
       //////Check here RFID card and if card correct clear display and open cabinet
@@ -139,6 +154,7 @@ void loop() {
           id_key = "";
           open_cabinet();
           attempt = 0;
+          close_cabinet();
           display_task();
         }
       } 
