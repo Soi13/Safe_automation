@@ -72,7 +72,7 @@ void open_cabinet() {
   lcd.clear();
   digitalWrite(30, HIGH);
   digitalWrite(31, LOW);
-  delay(5000);
+  delay(7000);
   digitalWrite(30, LOW);
   digitalWrite(31, LOW);
   }
@@ -89,7 +89,7 @@ void close_cabinet() {
   lcd.clear();
   digitalWrite(30, LOW);
   digitalWrite(31, HIGH);
-  delay(5000);
+  delay(7000);
   digitalWrite(30, LOW);
   digitalWrite(31, LOW);
 }
