@@ -88,5 +88,5 @@ Wiper to LCD VO
 Leg2 to 3.3V<br/>
 
 <p><h2>Circuit:</h2></p><br/>
-![Picture of schema](schema_.jpg)
+![Picture of schema](schema_)
 
