@@ -85,7 +85,12 @@
 <h3>Rotary Potentiometer</h3>
 <b>Leg1</b> to GND<br/>
 <b>Wiper</b> to LCD VO<br/>
-<b>Leg2</b> to 3.3V<br/>
+<b>Leg2</b> to 3.3V<br/><br/><br/><br/>
+
+<p><h2>Watch the video</h2></p><br/>
+
+[![Video Title](https://img.youtube.com/vi/93Auo3oyyt0/mq2.jpg)](https://youtube.com/shorts/93Auo3oyyt0)
+
 
 <p><h2>Circuit:</h2></p><br/>
 
